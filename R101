@@ -1,0 +1,322 @@
+pacman::p_load(tidyverse)
+# basic exercises ####
+# Instructions:
+#
+#   Assign a Sample ID:
+#
+#   Create a variable called sample_id.
+#
+# Assign it a unique identifier for your sample. Since it's text, make sure to put it in quotes, e.g., "ExpA_S001".
+sample_id <- "Sample1a"
+sample_id
+#
+# Record the Organism:
+#
+# Create a variable called organism_name.
+#
+# Assign the scientific name of the organism your sample came from. Again, use quotes, e.g., "Saccharomyces cerevisiae".
+organism_name <- "Saccharomyces cerevisiae"
+organism_name
+#
+# Record a Measurement:
+#
+# You've measured the length of a cell from this sample in micrometers.
+#
+# Create a variable called cell_length_um.
+#
+# Assign a numerical value (without quotes) for the length, e.g., 7.5.
+cell_length_um <- 7.5
+print(cell_length_um)
+#
+# Record a Binary Condition:
+#
+#   Was this sample grown in the presence of a specific nutrient (e.g., glucose)?
+#
+#   Create a variable called grown_on_glucose.
+#
+# Assign a logical value: TRUE if yes, FALSE if no (these are special keywords in R, no quotes needed). E.g., TRUE.
+grown_on_glucose <- TRUE
+grown_on_glucose
+#
+# Check Your Work (Content and Class):
+#
+#   After creating each variable, type the variable name on a new line and press Enter to see its content.
+#
+# Use the class() function to check what type of data R thinks each variable holds. For example:
+#
+class(sample_id)
+#
+class(organism_name)
+#
+class(cell_length_um)
+#
+class(grown_on_glucose)
+#
+cat(sample_id, cell_length_um, grown_on_glucose)
+
+
+# exercise on factors ####
+# Instructions:
+#
+#   Categorizing by Treatment Group (Unordered Factor):
+#
+#   Imagine your samples are from different treatment groups: "Control", "Drug A", "Drug B".
+#
+# First, create a character variable for the treatment of ONE sample
+drug_char1 <- c("Drug A")
+#
+# What is its class?
+class(drug_char1)
+#
+#   Now, convert sample_treatment into a factor. This tells R it's a category.
+drug_factor <- factor(drug_char1)
+drug_factor
+#
+# What is its class now? Notice how R also lists "Levels" when you print it.
+class(drug_factor)
+#
+# To see all the possible "name tags" (categories) R knows for this factor, use levels()
+levels(drug_factor)
+#
+# Why do you think R automatically inferred "Control", "Drug A", "Drug B" as levels, even though you only assigned "Drug A"? (Hint: It hasn't; it only knows "Drug A" for now. We'll fix this in the next step!)
+#
+# The "Integer Tag" Reveal: To see the hidden integer that R uses for "Drug A", convert the factor to a numeric type:
+as.numeric(drug_factor)
+#
+# What number did you get? This number corresponds to the alphabetical position of "Drug A" among the levels R currently sees (Drug A).
+#
+# Defining All Levels Explicitly:
+#
+# When you create a factor, it's good practice to tell R all the possible levels upfront, even if a particular sample only has one of them. This ensures consistency.
+#
+# Re-create sample_treatment_factor, but this time specifying all the levels:
+drug_factor2 <- factor("Drug Mexicolmab",
+  levels = c("Control", "Drug Mexicolmab", "Drug Anoximab")
+)
+drug_factor2
+as.numeric(drug_factor2)
+drug_char <- c("Drug A", "Drug A", "Control", "Drug B", "Drug B")
+drug_factor <- factor(drug_char)
+drug_factor
+#
+#   Now, what number do you get from as.numeric()? How does it relate to the levels you explicitly defined? This demonstrates how the integer tag links to its "name tag" position in the defined levels.
+#
+# Categorizing by Developmental Stage (Ordered Factor):
+#
+#   Sometimes, categories have a natural order. For example, developmental stages: "Larva", "Pupa", "Adult". "Adult" is definitely "later" than "Larva".
+#
+# Let's create a factor for a sample's developmental stage, making sure R understands the order:
+factor_stage <-
+  factor(
+    sample(
+      x = c("Larva", "Pupa", "Adult"),
+      size = 20, replace = TRUE
+    ),
+    levels = c("Larva", "Pupa", "Adult"),
+    ordered = TRUE
+  )
+factor_stage
+class(factor_stage)
+levels(factor_stage)
+as.numeric(factor_stage)
+#   How does the class() output differ from sample_treatment_factor_full? What integer did "Pupa" get, and why?
+
+# exercise for matrix ####
+# Scenario:
+#   Imagine you are a field biologist studying plant distribution. You've set up several quadrats (square frames) in your study area and counted the number of individuals for three different plant species in each quadrat.
+# Instructions:
+#
+# Create Your Data:
+#
+# You have the following counts:
+# Species A: Quadrat 1: 12, Quadrat 2: 8, Quadrat 3: 15
+# Species B: Quadrat 1: 5, Quadrat 2: 10, Quadrat 3: 7
+# Species C: Quadrat 1: 20, Quadrat 2: 14, Quadrat 3: 18
+#
+# Create a numeric vector for each species' counts (e.g.,
+species_A_counts <- c(12, 8, 15)
+species_B_counts <- c(5, 10, 7)
+species_C_counts <- c(20, 14, 18)
+
+# Create a Matrix:
+#   Combine these three vectors into a single matrix. Name this matrix quadrat_data.
+# Make sure each row represents a species and each column represents a quadrat.
+# Set the number of rows (nrow) to 3 and the number of columns (ncol) to 3.
+#
+# Name Rows and Columns:
+#   Assign row names to your matrix: "SpeciesA", "SpeciesB", "SpeciesC".
+# Assign column names to your matrix: "Quadrat1", "Quadrat2", "Quadrat3".
+
+quadrat_data <-
+  matrix(c(species_A_counts, species_B_counts, species_C_counts),
+    nrow = 3, ncol = 3,
+    byrow = TRUE,
+    dimnames = list(
+      paste0("Species", c("A", "B", "C")),
+      c("Q1", "Q2", "Q3")
+    )
+  )
+
+quadrat_data
+# Index Your Matrix (Access Data):
+#   Access a single element: Get the count of Species B in Quadrat 2.
+quadrat_data[2, 2]
+quadrat_data["SpeciesB", "Q2"]
+#
+# Access a full row: Get all counts for Species A.
+quadrat_data[1, ]
+quadrat_data["SpeciesB", "Q2"]
+#
+# Access a full column: Get all counts from Quadrat 3.
+quadrat_data[, 3]
+#
+# Access multiple elements/rows/columns:
+#   Get the counts for Species A and Species C in Quadrat 1 and Quadrat 2.
+quadrat_data[c(1, 3), 1:2]
+
+
+# Exercise: for and while loops, and if/ifelse/case_xxx ####
+
+# 1. Analyzing Gene Expression Data (Using for loop and if/else)
+#
+# Scenario: You have a dataset of gene expression levels (e.g., RNA-seq counts) for several genes across different samples. You want to identify genes that are either highly expressed or lowly expressed based on a threshold.
+#
+# Task:
+#   Create Sample Data: Generate a numeric vector representing expression levels for 20 genes (mean=100, SD=30).
+gene_expression <- rnorm(n = 20, mean = 100, sd = 30) |>
+  round(2)
+#
+# Identify Differentially Expressed Genes:
+#   Using a for loop, iterate through each gene's expression level.
+# Inside the loop, use an if/else if/else statement to categorize each gene:
+# If expression is above 120, print paste("Gene", i, "is highly expressed:", gene_expression[i]).
+# If expression is below 70, print paste("Gene", i, "is lowly expressed:", gene_expression[i]).
+# Otherwise, print paste("Gene", i, "is moderately expressed:", gene_expression[i]).
+for (gene_i in seq_along(gene_expression)) {
+  if (gene_expression[gene_i] > 120) {
+    cat(
+      "Gene", gene_i, "is highly expressed:",
+      gene_expression[gene_i], "\n"
+    )
+  } else if (gene_expression[gene_i] < 70) {
+    cat(
+      "Gene", gene_i, "is lowly expressed:",
+      gene_expression[gene_i], "\n"
+    )
+  } else {
+    cat(
+      "Gene", gene_i, "is moderately expressed:",
+      gene_expression[gene_i], "\n"
+    )
+  }
+}
+
+#
+# Create a similar loop using case_when to simplify the rules.
+#
+for (gene_i in seq_along(gene_expression)) {
+  #  print(gene_i)
+  cat(
+    "Gene", gene_i,
+    case_when(
+      gene_expression[gene_i] > 120 ~
+        "is highly expressed:",
+      gene_expression[gene_i] < 70 ~
+        "is lowly expressed:",
+      .default = "is moderately expressed:"
+    ),
+    gene_expression[gene_i], "\n"
+  )
+}
+# 2. Simulating Population Growth (Using while loop)
+#
+# Scenario: You want to simulate the growth of a bacterial population over time until it reaches a certain threshold.
+# Task:
+# Set Initial Conditions:
+# Start with
+population_size <- 100
+# Set a
+growth_rate <- 1.1 # (meaning 10% increase per generation).
+# Set a
+carrying_capacity <- 1000
+# Initialize
+generation <- 0
+# Simulate Growth:
+# Use a while loop that continues as long as population_size < carrying_capacity.
+# Inside the loop:
+# Update population_size <- population_size * growth_rate.
+# Increment generation <- generation + 1.
+# Print the population_size and generation at each step.
+while (population_size < carrying_capacity) {
+  population_size <-
+    floor(population_size * growth_rate)
+  generation <- generation + 1
+  cat(
+    "Population:", population_size,
+    "Generation:", generation, "\n"
+  )
+  if (population_size > carrying_capacity) {
+    cat("It took", generation, "generations to reach carrying capacity\n")
+  }
+}
+
+# Add a Condition: After the loop, print a message indicating how many generations it took to reach the carrying capacity.
+
+#
+# 3. Classifying Species Based on Traits (Using for loop and ifelse)
+#
+# Scenario: You have a dataset of different plant species and two of their traits: leaf length (cm) and number of petals. You want to classify them into broad groups.
+# Task:
+# Create Sample Data:
+species <-
+  c("Oak", "Maple", "Cherry", "Rose", "Lily", "Daisy", "Sunflower")
+
+leaf_length <- c(15, 12, 8, 4, 18, 5, 25)
+petal_count <- c(0, 0, 5, 20, 6, 30, 0) # (0 for trees, flowers have petals)
+
+#  Categorize Species:
+#
+# Create an empty vector
+species_type <- character(length(species)) # to store the results.
+#
+# Use a for loop to iterate through each species.
+# Inside the loop, use nested ifelse statements to determine species_type based on these rules:
+# If petal_count[i] == 0, it's a "Tree".
+# If petal_count[i] > 10, it's a "Many-petaled Flower".
+# If petal_count[i] > 0, it's a "Few-petaled Flower".
+# Assign the result to species_type[i].
+for (species_i in seq_along(species)) {
+  species_type[species_i] <-
+    ifelse(test = petal_count[species_i] == 0,
+      yes = "Tree",
+      no = ifelse(
+        petal_count[species_i] > 10,
+        "Many-petaled Flower",
+        ifelse(petal_count[species_i] > 0,
+          "Few-petaled Flower",
+          "don't know"
+        )
+      )
+    )
+}
+
+# alternative if else
+for (species_i in seq_along(species)) {
+  if (petal_count[species_i] == 0) {
+    species_type[species_i] <- "Tree"
+  } else if (petal_count[species_i] > 10) {
+    species_type[species_i] <- "Many-petaled Flower"
+  } else if (petal_count[species_i] > 0) {
+    species_type[species_i] <- "Few-petaled Flower"
+  }
+}
+#
+# Display Results: After the loop, create a data frame or tibble with species, leaf_length, petal_count, and the new species_type column.
+#
+results <- tibble(
+  Species = species,
+  `Leaf length` = leaf_length,
+  `Petal count` = petal_count,
+  `Species type` = species_type
+)
+results
